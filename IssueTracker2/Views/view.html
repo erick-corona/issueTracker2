@@ -1,0 +1,37 @@
+<style type="text/css">
+td.fieldBgColor {
+	background-color: #eee
+}
+</style>
+<h2><span class="editsection">[<a href="<?php echo $this->listUrl; ?>"><?php echo wfMessage('back'); ?></a>]</span> <span class="mw-headline">#<?php echo $this->issue->issue_id . ': ' . $this->issue->title; ?></span></h2>
+<table width="100%"  border="0" cellspacing="3" cellpadding="2">
+  <tr>
+    <td width="150" align="left" valign="top" class="fieldBgColor"><?php echo wfMessage('Type'); ?></td>
+    <td style="background-color: #<?php echo $this->typeArray[$this->issue->type]['colour']; ?>"><?php echo wfMessage($this->typeArray[$this->issue->type]['name']); ?></td>
+  </tr>
+  <tr>
+    <td width="150" align="left" valign="top" class="fieldBgColor"><?php echo wfMessage('Status'); ?></td>
+    <td style="background-color: #<?php echo $this->statusArray[$this->issue->status]['colour']; ?>"><?php echo wfMessage($this->statusArray[$this->issue->status]['name']); ?></td>
+  </tr>
+  <tr>
+    <td width="150" align="left" valign="top" class="fieldBgColor"><?php echo wfMessage('Summary'); ?></td>
+    <td><?php echo $this->issue->summary; ?></td>
+  </tr>
+  <!--<tr>
+    <td width="150" align="left" valign="top" class="fieldBgColor"><?php echo wfMessage('Assignee'); ?></td>
+    <td><?php echo $this->issue->assignee; ?></td>
+  </tr>-->
+  <tr>
+    <td width="150" align="left" valign="top" class="fieldBgColor"><?php echo wfMessage('Reporter'); ?></td>
+    <td><?php echo $this->issue->user_name; ?></td>
+  </tr>
+  <tr>
+    <td width="150" align="left" valign="top" class="fieldBgColor"><?php echo wfMessage('Date'); ?></td>
+    <td><?php echo date("d-m-Y H:i:s", strtotime($this->issue->date_created)); ?></td>
+  </tr>
+</table>
+<p>[<a href="<?php echo $this->listUrl; ?>"><?php echo wfMessage('back'); ?></a>]&nbsp;
+<?php if ($this->isLoggedIn): ?>[<a href="<?php echo $this->editUrl; ?>"><?php echo wfMessage('edit'); ?></a>]&nbsp;
+[<a href="<?php echo $this->deleteUrl; ?>"><?php echo wfMessage('archive'); ?></a>]<?php endif; ?>
+<?php if ($this->issue->page): ?>  [<a href="<?php echo $this->urlpage . $this->issue->page; ?>"><?php echo wfMessage('page'); ?></a>]<?php endif; ?>
+</p>

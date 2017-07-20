@@ -1,0 +1,104 @@
+<style type="text/css">
+div#issueFilterBox {
+	padding-top: 10px;
+	float: left;
+	width: 50%;
+}
+div#issueSearchBox {
+	padding-top: 10px;
+	float: left;
+	width: 50%;
+	text-align: right;
+}
+div.issueClear {
+	float: none;
+	clear: both;
+}
+.s_clo, .s_res {
+	text-decoration: line-through;
+}
+</style>
+<?php if (isset($this->filter) && $this->filter === true): ?>
+<div id="issueFilterBox">
+	<form name="bt_filter" method="get" action="<?php echo $this->formAction; ?>">
+	  <input type="hidden" name="title" value="<?php echo $this->pageKey; ?>" />
+	  <input type="hidden" name="project" value="<?php echo $this->project; ?>" />
+	  <input type="hidden" name="bt_action" value="<?php echo $this->action; ?>" />
+	  <label for="bt_filters"><?php echo wfMessage('filter_title'); ?>: </label>
+	  <?php if ($this->isLoggedIn()): ?>
+	  <select name="bt_filter_by">
+	  <optgroup label="filter" title="Filter">
+	    <option value="all"<?php echo ($this->filterBy == null) ? ' selected="true"' : ''; echo ">".wfMessage("Allissues")?></option>
+	    <option value="reported_by_me"<?php echo ($this->filterBy == 'reported_by_me') ? ' selected="true"' : '';  echo ">".wfMessage("Reportedbyme")?></option>
+	    <option value="assined_to_me"<?php echo ($this->filterBy == 'assined_to_me') ? ' selected="true"' : '';  echo ">".wfMessage("Assignedtome")?></option>
+	  </select>
+	  <?php endif; ?>
+	  <select name="bt_filter_status">
+	  <optgroup label="status" title="Status">
+	    <option value="any"<?php echo ($this->filterStatus == null) ? ' selected="true"' : ''; echo ">".wfMessage("Any")?></option>
+        <?php foreach ($this->issueStatus as $name => $status): ?> 
+        <option value="<?php echo $name; ?>"<?php echo ($this->filterStatus == $name) ? ' selected="true"' : ''; ?>><?php echo wfMessage($status['name']); ?></option>
+        <?php endforeach; ?>
+	    <option value="archived"<?php echo ($this->filterStatus == 'archived') ? ' selected="true"' : '';  echo ">".wfMessage("Archived")?></option>
+	  </optgroup>
+	  </select>
+		<input type="text" name="bt_search_string" id="bt_search_string" value="<?php echo (isset($this->searchString)) ? $this->searchString : ''; ?>" />
+		<input type="submit" name="bt_filter" id="bt_filter" value="<?php echo wfMessage('form_apply'); ?>" />
+	</form>
+</div>
+<?php endif; ?>
+<div class="issueClear"></div>
+<h2><?php if ($this->auth === false || ($this->auth === true && $this->isLoggedIn === true)): ?>
+<span class="editsection">[<a href="<?php echo $this->addUrl; ?>"><?php echo wfMessage('add'); ?></a>]</span>
+<?php else: ?>
+<span class="editsection"><?php echo wfMessage('login_msg'); ?></span>
+<?php endif; ?>
+<span class="mw-headline"><?php echo wfMessage('view_issues'); ?></span></h2>
+<table cellpadding="3" class="wikitable sortable" width="98%" style="font-size: 90%">
+  <tr>
+    <th valign="top" align="left" width="40"><b><?php echo wfMessage('id'); ?></b></th>
+    <th valign="top" align="left" width="80"><b><?php echo wfMessage('type'); ?></b></th>
+    <th valign="top" align="left" width="350"><b><?php echo wfMessage('title'); ?></b></th>
+    <th valign="top" align="left" width="80"><b><?php echo wfMessage('status'); ?></b></th>
+    <th valign="top" align="left" width="90"><b><?php echo wfMessage('assignee'); ?></b></th>
+    <th valign="top" align="left" width="70"><b><?php echo wfMessage('date'); ?></b></th>
+    <th valign="top" align="center" width="100"><b><?php echo wfMessage('action'); ?></b></th>
+  </tr>
+  <?php while ($issue = $this->issues->fetchObject()): ?>
+  <tr>
+    <td><?php if ($this->hasViewPerms): ?><a href="<?php echo $this->viewUrl . $issue->issue_id; ?>"># <?php echo $issue->issue_id; ?></a><?php else: ?># <?php echo $issue->issue_id; endif; ?></td>
+    <td style="background-color: #<?php echo $this->issueType[$issue->type]['colour']; ?>"><?php echo wfMessage($this->issueType[$issue->type]['name']); ?></td>
+    <td><span class="<?php echo $issue->status; ?>"><?php echo htmlspecialchars($issue->title, ENT_QUOTES); ?></span></td>
+    <td style="background-color: #<?php echo $this->issueStatus[$issue->status]['colour']; ?>"><?php echo wfMessage($this->issueStatus[$issue->status]['name']); ?></td>
+    <td><?php echo htmlspecialchars($issue->assignee, ENT_QUOTES); ?></td>
+    <td><?php echo date("d-m-Y", strtotime($issue->priority_date)); ?></td>
+    <td align="center">
+    <?php if ($this->isLoggedIn): ?>
+    	<?php if ($this->hasEditPerms): ?>[<a href="<?php echo $this->editUrl . $issue->issue_id; ?>"><?php echo wfMessage('edit'); ?></a>]&nbsp;<?php endif; ?>
+    	<?php if ($this->hasDeletePerms): ?>[<a href="<?php echo $this->deleteUrl . $issue->issue_id; ?>"><?php echo wfMessage('archive'); ?></a>]<?php endif; ?>
+    	<?php if (($this->hasEditPerms) && ($issue->page)): ?>[<a href="<?php echo $this->urlpage . $issue->page; ?>"><?php echo wfMessage('page'); ?></a>]<?php endif; ?>
+    <?php endif; ?></td>
+  </tr>
+  <?php endwhile; ?>
+</table>
+<p> </p>
+<table border="0">
+  <tr>
+    <td><strong><?php echo wfMessage('type'); ?></strong>
+    <table cellpadding="3" style="font-size: 90%">
+        <tr>
+        <?php foreach ($this->issueType as $name => $type): ?>  
+          <td width="80" bgcolor="#<?php echo $type['colour']; ?>"><?php echo wfMessage($type['name']); ?></td>
+        <?php endforeach; ?>
+        </tr>
+      </table></td>
+    <td style="padding-left: 30px"><strong><?php echo wfMessage('status'); ?></strong>
+	<table cellpadding="3" style="font-size: 90%">
+        <tr>
+        <?php foreach ($this->issueStatus as $name => $status): ?>  
+          <td width="80" bgcolor="#<?php echo $status['colour']; ?>"><?php echo wfMessage($status['name']); ?></td>
+        <?php endforeach; ?>
+        </tr>
+      </table></td>
+  </tr>
+</table>

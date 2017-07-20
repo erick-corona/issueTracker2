@@ -1,0 +1,91 @@
+<style type="text/css">
+div#filterBox {
+	float: left;
+	width: 50%;
+}
+div#searchBox {
+	float: left;
+	width: 50%;
+	text-align: right;
+}
+div.clear {
+	float: none;
+	clear: both;
+}
+.s_clo, .s_res {
+	text-decoration: line-through;
+}
+</style>
+<?php if (isset($this->filter) && $this->filter === true): ?>
+<div id="filterBox">
+	<form name="bt_filter" method="get" action="<?php echo $this->formAction; ?>">
+	  <input type="hidden" name="bt_action" value="<?php echo $this->action; ?>" />
+	  <label for="bt_filterby"><?php echo wfMessage('view'); ?>: </label>
+	  <select name="bt_filterby">
+	    <option value="latest" selected="selected">Latest issues</option>
+	  </select>
+	  <input type="submit" name="bt_filter" id="bt_filter" value="Filter" />
+	</form>
+</div>
+<?php endif; ?>
+<?php if (isset($this->search) && $this->search === true): ?>
+<div id="searchBox">
+	<form name="bt_search" method="get" action="<?php echo $this->formAction; ?>">
+	  <input type="hidden" name="bt_action" value="<?php echo $this->action; ?>" />
+	  <label for="bt_bugid"><?php echo wfMessage('search_by_id'); ?> #</label>
+	  <input type="text" name="bt_bugid" id="bt_bugid" value="" /> 
+	  <input type="submit" name="bt_search" id="bt_search" value="Search" />
+	</form>
+</div>
+<?php endif; ?>
+<div class="clear"></div>
+<a name="View+Issues"></a><h2>
+<?php if ($this->auth === false || ($this->auth === true && $this->isLoggedIn === true)): ?>
+<span class="editsection">[<a href="<?php echo $this->addUrl; ?>"><?php echo wfMessage('add'); ?></a>]</span>
+<?php else: ?>
+<span class="editsection"><?php echo wfMessage('login_msg'); ?></span>
+<?php endif; ?>
+<span class="mw-headline"><?php echo wfMessage('view_issues'); ?></span></h2>
+<table cellpadding="3" class="wikitable sortable" width="100%" style="font-size: 90%">
+  <tr>
+    <th valign="top" align="left" width="40"><b><?php echo wfMessage('id'); ?></b></th>
+    <th valign="top" align="left" width="80"><b><?php echo wfMessage('type'); ?></b></th>
+    <th valign="top" align="left" width="350"><b><?php echo wfMessage('title'); ?></b></th>
+    <th valign="top" align="left" width="80"><b><?php echo wfMessage('status'); ?></b></th>
+    <th valign="top" align="left" width="90"><b><?php echo wfMessage('reporter'); ?></b></th>
+    <th valign="top" align="left" width="70"><b><?php echo wfMessage('date'); ?></b></th>
+    <th valign="top" align="left" width="80"><b><?php echo wfMessage('action'); ?></b></th>
+  </tr>
+  <?php while ($issue = $this->issues->fetchObject()): ?>
+  <tr>
+    <td># <?php echo $issue->issue_id; ?></td>
+    <td style="background-color: #<?php echo $this->typeArray[$issue->type]['colour']; ?>"><?php echo $this->typeArray[$issue->type]['name']; ?></td>
+    <td class="<?php echo $issue->status; ?>"><?php echo htmlspecialchars($issue->title, ENT_QUOTES); ?></td>
+    <td><?php echo $this->statusArray[$issue->status]['name']; ?></td>
+    <td><?php echo htmlspecialchars($issue->user_name, ENT_QUOTES); ?></td>
+    <td><?php echo date("d-m-Y", strtotime($issue->date_added)); ?></td>
+    <td align="center"><?php if ($this->isLoggedIn && $this->isAdmin) : ?><!--<a href="<?php echo $this->editUrl . $issue->issue_id; ?>"><?php echo wfMessage('edit'); ?></a> | --><a href="<?php echo $this->deleteUrl . $issue->issue_id; ?>"><?php echo wfMessage('delete'); ?></a><?php endif; ?></td>
+  </tr>
+  <?php endwhile; ?>
+</table>
+<table border="0">
+  <tr>
+    <td><strong><span class="mw-headline"><?php echo wfMessage('type'); ?></span></strong>
+    <table cellpadding="3" class="wikitable" style="font-size: 90%">
+        <tr>
+        <?php foreach ($this->typeArray as $name => $type): ?>  
+          <td width="80" bgcolor="#<?php echo $type['colour']; ?>"><?php echo wfMessage($type['name']); ?></td>
+        <?php endforeach; ?>
+        </tr>
+      </table></td>
+    <td style="padding-left: 30px">
+    <strong><span class="mw-headline"><?php echo wfMessage('status'); ?></span></strong>
+	<table cellpadding="3" class="wikitable" style="font-size: 90%">
+        <tr>
+        <?php foreach ($this->statusArray as $name => $status): ?>  
+          <td width="80" bgcolor="#<?php echo $status['colour']; ?>"><?php echo wfMessage($status['name']); ?></td>
+        <?php endforeach; ?>
+        </tr>
+      </table></td>
+  </tr>
+</table>

@@ -1,0 +1,64 @@
+<link rel="stylesheet" type="text/css" href="/skins/common/editor/html/html-skin.css"/>
+<script>
+$(document).ready(function()	{	
+	$("#html").jTagEditor({		
+		tagSet:"/skins/common/editor/html/html-tags.js",
+		tagMask:"",
+		insertOnShiftEnter:"\n\n",
+		insertOnCtrlEnter:"" 
+	});
+});
+</script>
+<h2><span class="editsection">[<a href="<?php echo $this->listUrl; ?>"><?php echo wfMessage('back'); ?></a>]</span> <span class="mw-headline">Edit Issue</span></h2>
+<?php if (isset($this->errors)): ?>
+<p class="error"><?php echo $this->errors; ?></p>
+<?php endif; ?>
+<form name="bt_add_form" method="post" action="<?php echo $this->listUrl; ?>">
+  <input type="hidden" name="bt_action" value="<?php echo $this->action; ?>" />
+  <input type="hidden" name="title" value="<?php echo $this->pageKey; ?>" />
+  <input type="hidden" name="bt_issueid" value="<?php echo $this->issueId; ?>" />
+  <table width="530" border="0">
+    <tr>
+      <td width="130" align="left" valign="top"><strong><?php echo wfMessage('title'); ?>:</strong></td>
+      <td width="400"><input name="bt_title" tabindex="1" size="30" maxlength="100" id="bt_title" style="width: 415px" value="<?php echo (isset($_POST['bt_title'])) ? htmlspecialchars($_POST['bt_title']) : ''; ?>" /></td>
+    </tr>
+    <tr>
+      <td align="left" valign="top"><strong><?php echo wfMessage('summary'); ?>:</strong></td>
+      <td><textarea rows="10" cols="10" tabindex="2" id="html" class="jTagEditor" accesskey="," name="bt_summary"><?php echo (isset($_POST['bt_summary'])) ? $_POST['bt_summary'] : ''; ?></textarea></td>
+    </tr>
+    <tr>
+      <td align="left" valign="top"><strong><?php echo wfMessage('type'); ?>:</strong></td>
+      <td><select name="bt_type" id="bt_type" tabindex="3" style="width: 150px">
+      <?php foreach ($this->typeArray as $name => $type): ?>  
+          <option value="<?php echo $name; ?>"<?php echo (isset($_POST['bt_type']) && $_POST['bt_type'] == $name) ? ' selected="true"' : ''; ?>><?php echo wfMessage($type['name']); ?></option>
+         <?php endforeach; ?>
+        </select></td>
+    </tr>
+    <tr>
+      <td align="left" valign="top"><strong><?php echo wfMessage('status'); ?>:</strong></td>
+      <td>
+      <select name="bt_status" id="bt_status" tabindex="4" style="width: 150px">
+      <?php foreach ($this->statusArray as $name => $status): ?>  
+          <option value="<?php echo $name; ?>"<?php echo (isset($_POST['bt_status']) && $_POST['bt_status'] == $name) ? ' selected="true"' : ''; ?>><?php echo wfMessage($status['name']); ?></option>
+         <?php endforeach; ?>
+      </select>
+      </td>
+    </tr>
+    <tr>
+      <td align="left" valign="top"><strong><?php echo wfMessage('assignee'); ?>:</strong></td>
+      <td><select name="bt_assignee" id="bt_assignee" tabindex="3" style="width: 150px">
+      <option value="<?php echo wfMessage('unassigned'); ?>"><?php echo wfMessage('unassigned'); ?></option>
+      <?php echo $this->usersList; ?>
+        </select></td>
+    </tr>
+    <tr>
+      <td width="130" align="left" valign="top"><strong><?php echo wfMessage('page'); ?>:</strong></td>
+      <td width="400"><input name="bt_page" tabindex="1" size="30" maxlength="100" id="bt_page" style="width: 415px" value="<?php echo (isset($_POST['bt_page'])) ? $_POST['bt_page'] : ''; ?>" /></td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" style="padding-top: 20px">&nbsp;</td>
+      <td><input type="submit" name="bt_submit" id="bt_submit" value="<?php echo wfMessage('form_submit'); ?>" />
+      <input type="submit" name="bt_cancel" id="bt_cancel" value="<?php echo ucfirst(wfMessage('cancel')); ?>" onClick="this.form.bt_action.value='list'" /></td>
+    </tr>
+  </table>
+</form>

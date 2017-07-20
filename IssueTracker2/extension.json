@@ -1,0 +1,35 @@
+{
+	"name": "IssueTracker",
+	"version": "0.6.0",
+	"authors": [
+	  "Erick Corona"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:IssueTracker",
+	"descriptionmsg": "IssueTracker-desc",
+	"license-name": "GPL-2.0+",
+	"type": "other",
+	"AutoloadClasses": {
+	  "SpecialIssueTracker": "IssueTracker.special.php",
+	  "IssueTracker": "IssueTracker.class.php"
+	},
+	"SpecialPages": {
+	  "IssueTracker": "SpecialIssueTracker"
+	},
+	"MessagesDirs": {
+	  "IssueTracker": [
+		"i18n"
+	  ]
+	},
+  "ExtensionMessagesFiles": {
+	"IssueTrackerExtension" : "IssueTracker.i18n.magic.php"
+	},
+	"Hooks": {
+	  "ParserFirstCallInit": [
+		"IssueTracker::wfIssueTrackerSetParserHook"
+	  ],
+	  "ParserAfterTidy": [
+		"IssueTracker::wfIssueTrackerDecodeOutput"
+	  ]
+	},
+	"manifest_version": 1
+}
