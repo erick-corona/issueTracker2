@@ -1,4 +1,6 @@
 # issueTracker2
+The IssueTracker2.0 extension is a simple and powerful bug tracking and issue tracking system developed to make this process easier for your team. It introduces the tag to the MediaWiki markup, which can be used to produce an issue and bug tracking system.
+
 functions
 - add issues.
 - Search issues.
