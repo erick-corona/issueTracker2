@@ -11,3 +11,5 @@ functions
 - MVC architecture, easy to extended.
 - Link to a description page
 - Add issue tag and status in translation file
+
+more at https://www.mediawiki.org/wiki/IssueTracker_2.0
