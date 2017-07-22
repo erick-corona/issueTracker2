@@ -9,7 +9,7 @@ features:
 - Access Control List (group of users can have a different access levels).
 - Anonymous issue management.
 - MVC architecture, easy to extended.
-- Name research and status filters can be used simultanously.
+- Name research and status filters can be used simultaneously.
 - Link to a description page.
 - Issue tags translations and status translations enabled.
 
